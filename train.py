@@ -1,6 +1,8 @@
 import numpy as np
 import handle_storage as hs
-import load_csv as lc
+
+LEARNING_RATE: float = 0.02
+N_ITERATIONS: int = 200
 
 
 def normalize(x: np.ndarray) -> tuple[np.ndarray, float, float]:
@@ -45,8 +47,8 @@ def train_step(
 def train(
         x: np.ndarray,
         y: np.ndarray,
-        learning_rate: float = 0.01,
-        n_iterations: int = 100
+        learning_rate: float = LEARNING_RATE,
+        n_iterations: int = N_ITERATIONS
 ) -> tuple[float, float]:
     x_normalized, x_mean, x_std = normalize(x)
 
@@ -65,11 +67,10 @@ def train(
     return theta0, theta1
 
 
-if __name__ == "__main__":
-    df = lc.load("./data.csv")
-    if df is not None:
-        x = df['km'].to_numpy()
-        y = df['price'].to_numpy()
+def start_training(data: np.ndarray):
+    if data.size > 0:
+        x = data[:, 0]
+        y = data[:, 1]
         theta0, theta1 = train(x, y)
         print(f"Trained parameters: theta0 = {theta0}, theta1 = {theta1}")
         hs.save((theta0, theta1))
