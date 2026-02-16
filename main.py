@@ -30,7 +30,7 @@ def main():
         elif argv[1] == "run":
             ep.estimate_price()
         else:
-            raise ValueError("Invalid option. Use 'train' or 'test'.")
+            raise ValueError("Invalid option. Use 'train', 'test' or 'run'.")
     except Exception as e:
         print(f"{type(e).__name__}: {e}")
 
