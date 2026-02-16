@@ -4,6 +4,7 @@ from tester import tester
 import numpy as np
 import load_csv as lc
 import handle_storage as hs
+import estimate_price as ep
 
 
 def load_data(filepath: str) -> np.ndarray:
@@ -19,15 +20,17 @@ def load_data(filepath: str) -> np.ndarray:
 def main():
     try:
         if len(argv) != 2:
-            print("Usage: py main.py <option>")
+            raise ValueError("Usage: py main.py <option>")
         data = load_data("data.csv")
         if argv[1] == "train":
             start_training(data)
         elif argv[1] == "test":
             sucess_rate = tester(data, hs.load())
             print(f"Test success rate: {sucess_rate * 100:.2f}%")
+        elif argv[1] == "run":
+            ep.estimate_price()
         else:
-            print("Invalid option. Use 'train' or 'test'.")
+            raise ValueError("Invalid option. Use 'train' or 'test'.")
     except Exception as e:
         print(f"{type(e).__name__}: {e}")
 
