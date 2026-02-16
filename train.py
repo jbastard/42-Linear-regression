@@ -1,5 +1,7 @@
 import numpy as np
+from sys import argv
 import handle_storage as hs
+import load_csv as lc
 
 LEARNING_RATE: float = 0.02
 N_ITERATIONS: int = 200
@@ -74,3 +76,26 @@ def start_training(data: np.ndarray):
         theta0, theta1 = train(x, y)
         print(f"Trained parameters: theta0 = {theta0}, theta1 = {theta1}")
         hs.save((theta0, theta1))
+
+
+def load_data(filepath: str) -> np.ndarray:
+    df = lc.load(filepath)
+    if df is None:
+        return np.array([])
+    x = df['km'].to_numpy()
+    y = df['price'].to_numpy()
+    return np.column_stack((x, y))
+
+
+def main():
+    try:
+        if len(argv) > 2:
+            raise ValueError("Usage: py train.py [dataset.csv]")
+        filepath = argv[1] if len(argv) == 2 else "data.csv"
+        start_training(load_data(filepath))
+    except Exception as e:
+        print(f"{type(e).__name__}: {e}")
+
+
+if __name__ == "__main__":
+    main()

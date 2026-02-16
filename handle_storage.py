@@ -7,6 +7,10 @@ def save(theta: tuple[float, float], filename: str = "./theta.json"):
 
 
 def load(filename: str = "./theta.json") -> tuple[float, float]:
-    with open(filename, 'r') as f:
-        data = json.load(f)
-    return data['theta0'], data['theta1']
+    try:
+        with open(filename, 'r') as f:
+            data = json.load(f)
+        return float(data['theta0']), float(data['theta1'])
+    except (FileNotFoundError, json.JSONDecodeError, KeyError,
+            TypeError, ValueError):
+        return 0.0, 0.0
