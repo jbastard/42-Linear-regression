@@ -1,38 +1,18 @@
-from sys import argv
-from train import start_training
-from tester import tester
-import numpy as np
-import load_csv as lc
-import handle_storage as hs
-import estimate_price as ep
+from pathlib import Path
+import sys
 
 
-def load_data(filepath: str) -> np.ndarray:
-    df = lc.load(filepath)
-    if df is not None:
-        x = df['km'].to_numpy()
-        y = df['price'].to_numpy()
-        data = np.column_stack((x, y))
-        return data
-    return np.array([])
+def _bootstrap_path() -> None:
+    src_path = Path(__file__).resolve().parent / "src"
+    if str(src_path) not in sys.path:
+        sys.path.insert(0, str(src_path))
 
 
-def main():
-    try:
-        if len(argv) != 2:
-            raise ValueError("Usage: py main.py <option>")
-        data = load_data("data.csv")
-        if argv[1] == "train":
-            start_training(data)
-        elif argv[1] == "test":
-            sucess_rate = tester(data, hs.load())
-            print(f"Test success rate: {sucess_rate * 100:.2f}%")
-        elif argv[1] == "run":
-            ep.estimate_price()
-        else:
-            raise ValueError("Invalid option. Use 'train', 'test' or 'run'.")
-    except Exception as e:
-        print(f"{type(e).__name__}: {e}")
+def main() -> None:
+    _bootstrap_path()
+    from linear_regression.app.cli import main as cli_main
+
+    cli_main()
 
 
 if __name__ == "__main__":
